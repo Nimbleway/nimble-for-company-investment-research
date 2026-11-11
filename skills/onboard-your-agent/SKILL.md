@@ -35,7 +35,7 @@ Use exactly these numbers; never round them up or add providers. If your host ca
 
 The tiles say what they are: the user is testing Nimble's APIs on real investment research use cases, right here in their own AI. Each tile names the Nimble API behind it. The fifth tile is for taking those APIs into the user's own stack.
 
-**How to draw the tiles.** Put this line above the tiles: **"Test Nimble's APIs on these use cases, right here in your AI."** If your host can render visual output, draw a 2×2 grid of four cards, each with a short title, the Nimble API it tests, one line of what it does and one example, and below the grid one full-width fifth card with a link. Keep it plain and compact. If not, use this markdown:
+**How to draw the tiles.** Put this line above the tiles: **"Test Nimble's APIs on these use cases, right here in your AI."** If your host can render visual output, draw a 2×2 grid of four cards, each with a short title, the Nimble API it tests, one line of what it does and one example, and below the grid one full-width fifth card with the same bold title style, one line and a link. Keep it plain and compact. If not, use this markdown:
 
 | 🔎 **Deep research** · *Web Search Agents API* | ⚡ **Fast search** · *Search + Extract APIs* |
 | - | - |
@@ -45,7 +45,9 @@ The tiles say what they are: the user is testing Nimble's APIs on real investmen
 | Turn 10-K exhibits, decks, credit and merger agreements into markdown; download files and webcasts to disk or S3. | Prices, reviews, jobs and store data from 800+ Extract Templates, run as batches or scheduled jobs into S3 or Databricks. |
 | *"Pull the debt table from this credit agreement."* | *"Track Celsius prices at Walmart and Target daily."* |
 
-> 🔌 **Try asking Nimble your most complex web research questions.** Once you're done testing, call the same APIs from your own apps and agents (MCP, SDK, CLI, & more): **https://docs.nimbleway.com/integrations/overview**
+> 🔌 **Try asking Nimble your most complex web research questions**
+>
+> Once you're done testing, call the same APIs from your own apps and agents (MCP, SDK, CLI, & more): **https://docs.nimbleway.com/integrations/overview**
 
 Then ask:
 
@@ -55,7 +57,7 @@ Keep the chart, the tiles and the question to one screen. No preamble.
 
 ## Step 2: Check whether Nimble is already connected
 
-While the user answers, check silently. Either surface working means setup is done; skip to Step 5.
+While the user answers, check silently. Either surface working means setup is done; skip to Step 5 and route their request.
 
 - **MCP:** if any Nimble tool is listed, call the read-only `nimble_agents_list`.
 - **CLI:** if you can run shell commands: `command -v nimble && nimble --version && nimble agents list`. The CLI reads `NIMBLE_API_KEY` from the environment.
@@ -114,18 +116,9 @@ If a tool returns an authorization URL, show it exactly as given and wait. Do no
 | Claude.ai | Zip each folder under `skills/` and upload it under **Customize → Skills** |
 | ChatGPT or any other agent | Add the `SKILL.md` files to the project or custom GPT instructions |
 
-## Step 5: Verify with a real call
+## Step 5: Route the request to a skill
 
-The test prompt is **"Underwrite Duolingo long on paid subscriber growth."** Use it unless the user already named their own company or thesis in Step 1; then use theirs in the same shape ("Underwrite <company> <long or short> on <thesis>").
-
-Run one fast, cheap call with the test prompt and show the answer in one or two lines with its citations:
-
-- MCP: `nimble_search(query="Underwrite Duolingo long on paid subscriber growth", include_answer=true, max_results=3)`
-- CLI: `nimble search --query "Underwrite Duolingo long on paid subscriber growth" --include-answer --max-results 3`
-
-Then confirm: "Nimble is connected. That was Search, in seconds." Offer the full version of the same prompt as the next step: a `company-deep-research` run with `hf-fundamental-deep-dive` (about 5 to 15 minutes), for example "Do a fundamental deep dive on Duolingo (DUOL, duolingo.com) for a long/short fund testing a long thesis on paid subscriber growth and pricing power." Then route their answer from Step 1.
-
-## Step 6: Route the request to a skill
+Once Nimble is connected, say so in one line and route the user's answer from Step 1. Do not run a separate test call first; the user's own request is the first call.
 
 | What the user said | Skill | First move |
 | - | - | - |
