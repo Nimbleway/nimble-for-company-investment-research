@@ -12,8 +12,8 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 
 ## Quick start
 
-1. **Get a free trial:** https://online.nimbleway.com/signup
-2. **Connect Nimble to your agent.** The MCP server (`https://mcp.nimbleway.com/mcp`) uses OAuth, so no API key is needed. For PDF parsing, media downloads, batches and Jobs, also install the CLI (`npm i -g @nimble-way/nimble-cli`) and set `NIMBLE_API_KEY` from https://online.nimbleway.com/settings/api-keys.
+1. **Connect Nimble to your agent**, following [Nimble's agent setup guide](https://docs.nimbleway.com/agent-onboarding.md). The MCP server (`https://mcp.nimbleway.com/mcp`) uses OAuth: no API key is needed, and if you don't have a Nimble account you create your free one during that sign-in. On Claude products, install the Nimble plugin; on other MCP clients, add the server URL.
+2. **Add the CLI only if you need it.** Media downloads, SERP and Extract Jobs need the CLI (`npm i -g @nimble-way/nimble-cli`) with `NIMBLE_API_KEY`. Sign up at https://online.nimbleway.com/signup if you have no account, then create a key at https://online.nimbleway.com/settings/api-keys.
 3. **Install the skills**
 
    Claude Code:

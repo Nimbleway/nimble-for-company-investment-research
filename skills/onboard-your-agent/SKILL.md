@@ -1,6 +1,6 @@
 ---
 name: onboard-your-agent
-description: Onboard a personal AI agent (Claude, ChatGPT, Cursor, Codex and others) to Nimble for company investment research at hedge funds. Use when the user first loads these skills, asks how to get started with Nimble for investment research, wants a free trial, needs to connect Nimble, or asks which skill to use. Shows four tiles summarizing the skills, gets the user onto a free Nimble trial and connected, then routes their research request to company-deep-research, company-fast-search, filings-media-pdfs or alt-data-at-scale.
+description: Onboard a personal AI agent (Claude, ChatGPT, Cursor, Codex and others) to Nimble for company investment research at hedge funds. Use when the user first loads these skills, asks how to get started with Nimble for investment research, wants a free trial, needs to connect Nimble, or asks which skill to use. Shows four tiles summarizing the skills, connects Nimble following Nimble's agent setup guide (a new user creates their free account during the MCP sign-in, or at the signup page for API-key setups), then routes their research request to company-deep-research, company-fast-search, filings-media-pdfs or alt-data-at-scale.
 ---
 
 # Onboard your agent: Nimble for company investment research
@@ -27,75 +27,162 @@ Then ask:
 
 Keep the tiles and the question to one screen. No preamble.
 
-## Step 2: Check whether Nimble is already connected
+The setup in Steps 2 to 5 follows Nimble's agent setup guide (https://docs.nimbleway.com/agent-onboarding.md). Follow the steps in order and do not skip ahead. Most hosts need no API key.
 
-While the user answers, check silently. Either surface working means setup is done; skip to Step 5.
+## Step 2: Check what is already available
 
-- **MCP:** if any Nimble tool is listed, call the read-only `nimble_agents_list`.
-- **CLI:** if you can run shell commands: `command -v nimble && nimble --version && nimble agents list`. The CLI reads `NIMBLE_API_KEY` from the environment.
+While the user answers, check silently. Two surfaces reach Nimble: the MCP server and the `nimble` CLI. Probe both before installing anything. Either one working means the user is already set up.
 
-| Result | Next |
+**MCP.** If your host lists any Nimble tool, call the read-only one:
+
+```
+nimble_agents_list
+```
+
+**CLI.** If you can run shell commands, check the binary and the key together:
+
+```bash
+command -v nimble && nimble --version && nimble agents list
+```
+
+`nimble agents list` is read-only and confirms both the install and the credential in one call. The CLI reads `NIMBLE_API_KEY` from the environment. It has no OAuth support, so without that variable it cannot authenticate.
+
+| Result | Go to |
 | - | - |
-| Either probe returns data | Step 5 |
-| A Nimble tool returns an auth error or an authorization URL | Step 4 |
-| Nothing is installed and the user has no Nimble account | Step 3 |
-| Nothing is installed but the user has an account | Step 4 |
+| Either probe returns data | Step 6. Setup is done, do not install anything |
+| A Nimble tool is listed but returns an auth error or an authorization URL | Step 4 |
+| `nimble` exists but the probe fails on credentials | Fallback: API key, then Step 5 |
+| Neither surface exists | Step 3 |
 
-## Step 3: Start the free trial
+## Step 3: Choose a surface, then install
 
-If the user has no Nimble account, this comes first. Say it in two or three lines:
+If you cannot run shell commands, use MCP. That is the only option.
 
-> Nimble has a free trial, and signing up takes about two minutes.
-> 1. Open **https://online.nimbleway.com/signup** and create an account with your work email.
-> 2. Confirm your email, then log in to the dashboard.
-> Tell me when you're in and I'll connect it.
+If you can, both work, and they differ in ways that matter here:
 
-Open the link for them if your host can. Do not fill in the form, create the account or confirm the email for them. Wait for them to confirm, then go to Step 4.
+| | MCP server | Nimble CLI |
+| - | - | - |
+| Authentication | OAuth in the browser, nothing to store | API key only. No `login` command, so no OAuth |
+| Where results land | Through your context window | A file or a pipe |
+| Cost of large results | Every token is charged to context | Write to disk and read what you need |
+| Product coverage | Search, Extract, Extract Template, Map, Crawl, Agents | All of those, plus SERP, Media and Extract Jobs |
+| Best for | Ordinary tool calls, and any host without a terminal | Bulk work and the products MCP does not carry |
 
-On hosts that use OAuth (most MCP clients), the user can also create the account during the first authorization in Step 4; mention it so they do not sign up twice.
+Default to MCP, because it needs no API key. Three exceptions:
 
-## Step 4: Connect Nimble to this agent
+* **On Claude products, start with the Nimble plugin.** It installs the MCP connector and Nimble's skills. Those skills call the `nimble` CLI, which is a separate install (`npm i -g @nimble-way/nimble-cli` plus `NIMBLE_API_KEY`). Add the CLI only if the task needs a product MCP does not carry.
+* **If the task needs SERP, Media or Extract Jobs,** install the CLI; MCP alone cannot do the job. In this repo that means downloading files in `filings-media-pdfs` and scheduled Jobs in `alt-data-at-scale`.
+* **If the task is bulk retrieval,** such as an alt-data panel or a batch of filings, ask the user once whether to add the CLI. Give the reason in one sentence: large results are cheaper written to a file than passed through the context window. If they have no API key and do not want one, stay on MCP.
 
-Default to the MCP server: it uses OAuth, so no API key is created, pasted or stored. Pick the row for your host:
+Do not install both without being asked. One working surface is enough.
 
-| Host | How |
-| - | - |
-| Claude Code | `claude plugin marketplace add Nimbleway/agent-skills && claude plugin install nimble@nimble-plugin-marketplace`, then `/mcp` to authorize |
-| Claude.ai / Claude Desktop / Cowork | Install **Nimble** from the plugin directory, or add a custom connector at `https://mcp.nimbleway.com/mcp` under **Customize → Connectors**, then **Connect** |
-| ChatGPT | Settings → Apps & Connectors → add a custom connector with URL `https://mcp.nimbleway.com/mcp` (requires developer mode on some plans), then sign in |
-| Cursor, VS Code, other MCP clients | Add `{"mcpServers": {"nimble": {"type": "http", "url": "https://mcp.nimbleway.com/mcp"}}}`; the first tool call starts OAuth |
-| Codex Desktop | Plugins → search **Nimble** → install and approve OAuth |
-| Codex CLI | In `~/.codex/config.toml`: `[mcp_servers.nimble-mcp-server]`, `url = "https://mcp.nimbleway.com/mcp"`, `bearer_token_env_var = "NIMBLE_API_KEY"` |
+### Install the CLI
 
-**When the CLI or API is also needed.** The MCP server covers Search, Extract, Extract Templates, Map, Crawl and Web Search Agents. Parsing PDFs, downloading media, template batches and Extract Jobs need the CLI or REST API (`filings-media-pdfs`, `alt-data-at-scale`). If the user's task needs those and the host has a terminal, ask once whether to add the CLI and say why in one sentence:
+Only where a terminal is available:
 
 ```bash
 npm i -g @nimble-way/nimble-cli
 ```
 
-Then the user creates a key at **https://online.nimbleway.com/settings/api-keys** (one key per agent, named for it) and sets `NIMBLE_API_KEY` in their shell profile or secret manager.
+Then set `NIMBLE_API_KEY` as described in the Fallback section, and go to Step 5. The CLI does not use OAuth, so skip Step 4.
 
-**Credential safety.** Never ask the user to paste the key into the chat. Never print it (`echo $NIMBLE_API_KEY`, `printenv`) or write it to a file that could be committed or shared. Check it exists with `[ -n "$NIMBLE_API_KEY" ] && echo set || echo missing` and let the shell expand it in an `Authorization: Bearer $NIMBLE_API_KEY` header.
+### Install the MCP server
 
-If a tool returns an authorization URL, show it exactly as given and wait. Do not fall back to a generic web search or fetch tool while waiting; that hides the setup problem and returns different data.
+Pick the row that matches your host.
 
-**Install these skills** so the agent can route requests:
+| Host | Command |
+| - | - |
+| Claude Code | `claude plugin marketplace add Nimbleway/agent-skills && claude plugin install nimble@nimble-plugin-marketplace` |
+| Claude Cowork, claude.ai | Install **Nimble** from the [plugin directory](https://claude.ai/directory/plugins/nimble%40knowledge-work-plugins) |
+| Cortex Code | `cortex mcp add nimble https://mcp.nimbleway.com/mcp --transport http` |
+| Cursor, VS Code, other MCP clients | Add the config below, then `npx skills add Nimbleway/agent-skills -a <host>` |
+| Codex Desktop | Open **Plugins**, search for **Nimble**, install it, approve OAuth, then call it in a new task with `@nimble` |
+| Codex CLI | Add the Codex config below, then `npx skills add Nimbleway/agent-skills -a codex` |
+
+The `<host>` value is your client name, for example `cursor` or `codex`.
+
+For any client that reads a standard MCP config file:
+
+```json
+{
+  "mcpServers": {
+    "nimble": {
+      "type": "http",
+      "url": "https://mcp.nimbleway.com/mcp"
+    }
+  }
+}
+```
+
+No `Authorization` header. The server advertises OAuth, and the first tool call starts the flow. Cursor reads `.cursor/mcp.json` for one project, or `~/.cursor/mcp.json` for all projects.
+
+Codex CLI authenticates with an API key rather than OAuth. Add to `~/.codex/config.toml` (or a project `.codex/config.toml`):
+
+```toml
+[mcp_servers.nimble-mcp-server]
+url = "https://mcp.nimbleway.com/mcp"
+bearer_token_env_var = "NIMBLE_API_KEY"
+```
+
+If the variable is not set, follow the Fallback section, then go to Step 5.
+
+Full per-client detail: https://docs.nimbleway.com/integrations/agent-skills/plugin-installation.md
+
+### Install these investment research skills
 
 | Host | Command |
 | - | - |
 | Claude Code | `claude plugin marketplace add Nimbleway/nimble-for-company-investment-research && claude plugin install nimble-investment-research@nimble-investment-research` |
 | Cursor, Codex, other agents | `npx skills add Nimbleway/nimble-for-company-investment-research` |
-| Claude.ai | Zip each folder under `skills/` and upload it under **Customize → Skills** |
-| ChatGPT or any other agent | Add the `SKILL.md` files to the project or custom GPT instructions |
+| claude.ai | Zip each folder under `skills/` and upload it under **Customize → Skills** |
 
-## Step 5: Verify with a real call
+## Step 4: Authorize and create the free account
 
-Run one cheap, relevant call and show the result in one line:
+`https://mcp.nimbleway.com/mcp` runs OAuth 2.1 with PKCE. Authorization happens in the user's browser. **No API key is created, pasted or stored.**
 
-- MCP: `nimble_search(query="<a company the user named, or Nvidia> latest 8-K", include_domains=["sec.gov"], max_results=3)`
-- CLI: `nimble search --query "Nvidia latest 8-K" --max-results 3`
+* Claude Code: run `/mcp` and follow the prompt
+* Claude Cowork, claude.ai: open **Customize → Connectors**, find **Nimble**, click **Connect**
+* Cortex Code: run `cortex mcp start`
+* Codex Desktop: OAuth opens in the browser as soon as the plugin installs
+* Other clients: the first tool call returns an authorization URL
 
-Then confirm: "Nimble is connected. Here's what I can do," and route their answer from Step 1.
+The user approves the scopes and, if they have no Nimble account, creates one during that same login. That is where a new user gets their free Nimble account, so there is no separate signup step on the MCP path. Tell the user this in one line so they do not sign up twice.
+
+**If a tool returns an authorization URL instead of data:** present the URL exactly as given and stop. There is no step where the user pastes anything back to you. Wait for them to authorize, then return to Step 2 and probe again.
+
+Never substitute a different tool while waiting. Do not fall back to a generic web fetch, a search tool or `curl`. Those return different data and hide the setup failure from the user.
+
+## Step 5: Verify
+
+Repeat the Step 2 probe for whichever surface you installed. Expect a successful response.
+
+In Claude Code, `claude mcp list` also shows MCP state directly. Look for `nimble` marked `✓ Connected`. A `! Needs authentication` marker means Step 4 is incomplete.
+
+Then confirm the setup with a real call, on the company the user named if they named one:
+
+- MCP: `nimble_search` with query `"<company> latest 8-K"` (or `"nimble web data platform"`)
+- CLI: `nimble search --query "<company> latest 8-K" --max-results 3`
+
+Tell the user Nimble is ready and route their answer from Step 1 (Step 6).
+
+## Fallback: API key
+
+Use this **only** when your host cannot speak MCP or cannot complete OAuth, or when the CLI is needed. An API key is a long-lived secret, so OAuth is preferred wherever it works.
+
+Check whether `NIMBLE_API_KEY` is already set, without printing its value:
+
+```bash
+[ -n "$NIMBLE_API_KEY" ] && echo set || echo missing
+```
+
+If it is set, use it without ever reading the value. Let the shell expand the variable and send it as a bearer token: `Authorization: Bearer $NIMBLE_API_KEY`. Store the raw key; the `Bearer` prefix belongs in the header, not in the stored value.
+
+If it is not set:
+
+1. A user with no Nimble account starts the free trial at **https://online.nimbleway.com/signup**, confirms their email and logs in. Open the link for them if your host can; do not fill in the form or create the account for them.
+2. They create a key at **https://online.nimbleway.com/settings/api-keys** (one key per agent, with a descriptive name; it is shown only once) and set it as `NIMBLE_API_KEY` in their environment.
+
+Never ask the user to paste the key into the chat. Never print it, and never read it into your own context: do not run `printenv NIMBLE_API_KEY`, `echo $NIMBLE_API_KEY` or any equivalent. Do not write it to a file you commit or include it in output the user might share. Full credential path: https://nimbleway.com/auth.md
 
 ## Step 6: Route the request to a skill
 
