@@ -11,10 +11,16 @@
     {
       "name": "nimble-investment-research",
       "source": "./",
-      "description": "Deep research agents, fast search, filings and PDF parsing, and alternative data at scale for hedge fund company research.",
-      "version": "1.1.0",
+      "description": "Deep research agents, fast search, filings and PDF parsing, and alternative data at scale for hedge fund company research, with the Nimble MCP server bundled.",
+      "version": "1.2.0",
       "category": "productivity",
-      "tags": ["hedge-funds", "investment-research", "alternative-data", "sec-filings", "web-search"],
+      "tags": [
+        "hedge-funds",
+        "investment-research",
+        "alternative-data",
+        "sec-filings",
+        "web-search"
+      ],
       "skills": [
         "./skills/onboard-your-agent",
         "./skills/company-deep-research",

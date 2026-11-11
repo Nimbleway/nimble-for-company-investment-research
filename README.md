@@ -4,7 +4,7 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 
 | Skill | What it does |
 | - | - |
-| [`onboard-your-agent`](skills/onboard-your-agent/SKILL.md) | Start here. Shows the four skills as tiles, gets you onto a free Nimble trial and connected, then routes your research request. |
+| [`onboard-your-agent`](skills/onboard-your-agent/SKILL.md) | Start here. Charts the finance benchmark (F1 accuracy + coverage vs. cost), shows the four use cases as tiles for testing Nimble's APIs in your AI plus a tile for integrating them into your stack, gets you onto a free Nimble trial and connected, then routes your research request. |
 | [`company-deep-research`](skills/company-deep-research/SKILL.md) | Cited deep research with 13 hedge fund Web Search Agents (fundamental deep dive, catalyst calendar, filing changes, forensic red flags, management track record, channel check, customer and supplier map, competitor momentum, government contracts, deal terms, deal tracker, credit file, credit early warning), plus a playbook for building your own agent when none fits. |
 | [`company-fast-search`](skills/company-fast-search/SKILL.md) | Answers in seconds with Nimble Search, Extract and Extract Templates: query patterns, source priority, date scoping, entity disambiguation and MNPI-safe sourcing for any company question. |
 | [`filings-media-pdfs`](skills/filings-media-pdfs/SKILL.md) | Parse 10-K exhibits, decks, credit and merger agreements and spreadsheets into markdown with Extract file parsing; download PDFs, images, audio and video with the Media API, to disk or straight to S3/GCS. |
@@ -13,10 +13,10 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 ## Quick start
 
 1. **Get a free trial:** https://online.nimbleway.com/signup
-2. **Connect Nimble to your agent.** The MCP server (`https://mcp.nimbleway.com/mcp`) uses OAuth, so no API key is needed. For PDF parsing, media downloads, batches and Jobs, also install the CLI (`npm i -g @nimble-way/nimble-cli`) and set `NIMBLE_API_KEY` from https://online.nimbleway.com/settings/api-keys.
+2. **Connect Nimble to your agent.** The MCP server (`https://mcp.nimbleway.com/mcp`) uses OAuth, so no API key is needed. In Claude Code it comes bundled with the plugin in step 3, so there's nothing else to install: run `/mcp` and authorize **nimble**. For PDF parsing, media downloads, batches and Jobs, also install the CLI (`npm i -g @nimble-way/nimble-cli`) and set `NIMBLE_API_KEY` from https://online.nimbleway.com/settings/api-keys.
 3. **Install the skills**
 
-   Claude Code:
+   Claude Code (one plugin: the skills plus the Nimble MCP server):
 
    ```bash
    claude plugin marketplace add Nimbleway/nimble-for-company-investment-research
@@ -34,10 +34,13 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 
    Claude.ai: zip a folder under `skills/` and upload it under **Customize → Skills**. ChatGPT or any other agent: add the `SKILL.md` files to the project or GPT instructions.
 
-4. **Say "onboard my agent for investment research"** and answer one question: what kind of company research do you want to do?
+4. **Say "onboard my agent for investment research"** and answer one question: what kind of company research do you want to test? Or try the test prompt: *"Underwrite Duolingo long on paid subscriber growth."*
+
+   To call the same APIs from your own code, agents or warehouse, see https://docs.nimbleway.com/integrations/overview.
 
 ## Example requests
 
+- "Underwrite Duolingo long on paid subscriber growth."
 - "Build a catalyst calendar for Viking Therapeutics (VKTX) for the next 12 months."
 - "What changed in Boeing's latest 10-K risk factors versus the prior year?"
 - "Track the approval status of Union Pacific's acquisition of Norfolk Southern."
@@ -71,6 +74,7 @@ skills/
   alt-data-at-scale/references/template-catalog.md
 benchmark/README.md                           # Finance Use-Case Benchmark v2 results
 .claude-plugin/                               # Claude Code plugin + marketplace manifests
+.mcp.json                                     # Nimble MCP server, bundled with the Claude Code plugin
 ```
 
 ## Docs
