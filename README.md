@@ -53,6 +53,10 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 - **Every value is sourced and dated.** If nobody published a value, it is reported as not found, not estimated.
 - **Point in time.** Values carry the date they were published, so you can tell what the market knew and when.
 
+## Benchmark
+
+In Nimble's public Finance Use-Case Benchmark v2 (40 tasks, six providers, November 2026), Nimble had the highest combined score across the eight finance jobs (0.594, Claude Opus 5.5 0.583) at $0.45 a run. On hedge fund company research it returned the most verified facts and got every critical answer-key question right, while Claude Opus 5.5 scored higher overall (0.608 against 0.573). Tables, method and caveats: [`benchmark/README.md`](benchmark/README.md).
+
 ## Layout
 
 ```
@@ -65,6 +69,7 @@ skills/
   filings-media-pdfs/SKILL.md
   alt-data-at-scale/SKILL.md
   alt-data-at-scale/references/template-catalog.md
+benchmark/README.md                           # Finance Use-Case Benchmark v2 results
 .claude-plugin/                               # Claude Code plugin + marketplace manifests
 ```
 

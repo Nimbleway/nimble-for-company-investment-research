@@ -126,8 +126,8 @@ By strategy, the usual starting points:
 
 Say these once during onboarding, briefly, then apply them silently:
 
-- Only public information. No paywalled, logged-in, leaked or expert-network content, which could be MNPI.
-- Every value comes with its source URL and date; anything unpublished is reported as not found, not estimated.
+- Only public information. No paywalled, logged-in, leaked or expert-network content, which could be MNPI. A paywalled page is never the only source for a value.
+- Every value comes with its source URL and date; anything unpublished is reported as not found, not estimated. Date windows stay windows, and problems that were cured are labeled cured, not live.
 - Analyst estimates and price targets are labeled as opinions.
 - Deep research runs take minutes. You'll be told when one starts and roughly when it will finish.
 

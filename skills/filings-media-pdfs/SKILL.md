@@ -76,6 +76,8 @@ Start with `light` for text. Switch to `pro` when tables come back flattened or 
 - **Diffs:** to compare filings (this year's risk factors against last year's), parse both versions in the same mode, align by section heading, and report added, removed and changed sentences with both URLs. The `hf-filing-changes` agent in `company-deep-research` does this end to end.
 - **Citations:** cite the document URL, its date, and the section or page heading the value came from. Quote short passages; do not reproduce whole documents.
 - **Allegations:** a short report or complaint is a claim, not a fact. Pair each claim with the primary record it relies on.
+- **Read the exact words.** Going concern means the filing states substantial doubt exists now, not that auditors "may" express it in future. A merger's outside (end) date and extension terms come from the merger agreement's termination section (8-K Exhibit 2.1), updated by any amendment; cite the section. A debt fair value in the notes is not a market quote.
+- **Windows stay windows.** "Expected to close in the second half of 2027" is quoted as written, not converted to a day.
 
 ## 4. Download files with Media
 
