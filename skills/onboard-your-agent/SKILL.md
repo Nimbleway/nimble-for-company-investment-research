@@ -53,11 +53,11 @@ Then ask:
 
 > **What kind of company investment research do you want to test?** For example, a name you're underwriting, a catalyst or deal you're tracking, a borrower you're watching, or a dataset you want to build. Or try: *"Underwrite Duolingo long on paid subscriber growth."*
 
-Keep the chart, the tiles and the question to one screen. No preamble.
+Keep the chart, the tiles and the question to one screen. No preamble. Then stop and wait for the user's answer: never run the example prompt yourself or answer it on the user's behalf.
 
 ## Step 2: Check whether Nimble is already connected
 
-While the user answers, check silently. Either surface working means setup is done; skip to Step 5 and route their request.
+While the user answers, check silently. This probe is the only Nimble call before the user replies: no Search, Extract or Web Search Agent call on the example prompt or anything else, and no "test" or "verification" call. Either surface working means setup is done; once the user answers, skip to Step 5 and route their request.
 
 - **MCP:** if any Nimble tool is listed, call the read-only `nimble_agents_list`.
 - **CLI:** if you can run shell commands: `command -v nimble && nimble --version && nimble agents list`. The CLI reads `NIMBLE_API_KEY` from the environment.

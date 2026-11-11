@@ -34,7 +34,7 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 
    Claude.ai: zip a folder under `skills/` and upload it under **Customize → Skills**. ChatGPT or any other agent: add the `SKILL.md` files to the project or GPT instructions.
 
-4. **Say "onboard my agent for investment research"** and answer one question: what kind of company research do you want to test? Or try the test prompt: *"Underwrite Duolingo long on paid subscriber growth."*
+4. **Say "onboard my agent for investment research"** and answer one question: what kind of company research do you want to test? Or try: *"Underwrite Duolingo long on paid subscriber growth."*
 
    To call the same APIs from your own code, agents or warehouse, see https://docs.nimbleway.com/integrations/overview.
 

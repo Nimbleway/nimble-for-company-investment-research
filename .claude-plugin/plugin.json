@@ -1,6 +1,6 @@
 {
   "name": "nimble-investment-research",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Nimble skills for company investment research at hedge funds: cited deep research with 13 hedge fund Web Search Agents, fast primary-source search, filing and PDF parsing with media download, and alternative data at scale with Extract Templates.",
   "author": {
     "name": "Nimble",
