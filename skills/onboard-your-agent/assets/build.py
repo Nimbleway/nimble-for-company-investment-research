@@ -3,7 +3,10 @@
 
 Writes, next to this script:
   benchmark-chart.svg  the benchmark scatter as static SVG (no JS, light/dark aware)
+  benchmark-chart-light.svg / -dark.svg  fixed-theme copies with a solid background, for the GitHub README
   onboarding.html      chart + five tiles, self-contained (no scripts, no CDN)
+  onboarding-inline.html  the same chart + tiles as a bare fragment (no doctype, no page background)
+                       to pass verbatim to an inline chat widget
   onboarding.png       a screenshot of onboarding.html (needs Google Chrome)
 
 Run after any change to the benchmark numbers or tile copy:
@@ -108,6 +111,62 @@ def chart_svg(standalone):
     return "\n".join(out), style
 
 
+LIGHT = dict(grid="#e1e0d9", axis="#c3c2b7", tick="#898781", ink="#52514e", accent="#2a78d6", pt="#888780", bg="#ffffff")
+DARK = dict(grid="#2c2c2a", axis="#383835", tick="#898781", ink="#c3c2b7", accent="#3987e5", pt="#888780", bg="#0d1117")
+
+
+def fixed_svg(svg, theme):
+    """Standalone chart with one fixed theme and a solid background (GitHub <picture>)."""
+    c = theme
+    style = (f".grid{{stroke:{c['grid']};stroke-width:1}}.axis{{stroke:{c['axis']};stroke-width:1}}"
+             f".tick{{fill:{c['tick']};font-size:11px}}.ttl,.lbl{{fill:{c['ink']};font-size:12px}}"
+             f".hd{{fill:{c['ink']};font-size:15px;font-weight:600}}"
+             f".lbl.n{{fill:{c['accent']};font-weight:600}}.pt{{fill:{c['pt']};stroke:{c['bg']};stroke-width:2}}.pt.n{{fill:{c['accent']}}}")
+    head, body = svg.split(">", 1)
+    head = head.replace(f'viewBox="0 0 {W} {H}"', f'viewBox="0 -34 {W} {H + 34}"')
+    return (f"{head}>\n<style>{style}</style>\n<rect x=\"0\" y=\"-34\" width=\"{W}\" height=\"{H + 34}\" fill=\"{c['bg']}\"/>\n"
+            f"<text class=\"hd\" x=\"{L}\" y=\"-10\">{html.escape(TITLE)}</text>\n"
+            + body.split("</style>", 1)[-1] if "</style>" in body else body)
+
+
+def inline_fragment(svg, svg_style):
+    """Chart + tiles as a bare HTML fragment for inline chat widgets: no doctype, no body, transparent
+    background, host CSS variables with fallbacks."""
+    e = html.escape
+    tiles = "\n".join(
+        f'<div class="nb-tile"><p class="nb-t">{e(t)}</p><p class="nb-api">{e(api)}</p>'
+        f'<p class="nb-d">{e(d)}</p><p class="nb-ex">&ldquo;{e(ex)}&rdquo;</p></div>' for t, api, d, ex in TILES)
+    return f'''<style>
+.nb{{color:var(--text-primary,#0b0b0b);font-family:var(--font-sans,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif);padding:4px 0}}
+.nb p{{margin:0}}
+.nb-h{{font-size:16px;font-weight:500;margin:0 0 4px!important}}
+.nb-cap{{font-size:12px;color:var(--text-muted,#898781);margin:2px 0 18px!important}}
+.nb-h2{{font-size:15px;font-weight:500;margin:0 0 10px!important}}
+.nb-g{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+@media (max-width:520px){{.nb-g{{grid-template-columns:1fr}}}}
+.nb-tile{{background:var(--surface-2,transparent);border:0.5px solid var(--border,rgba(127,127,127,.35));border-radius:12px;padding:12px 14px}}
+.nb-t{{font-weight:500;font-size:14px}}
+.nb-api{{font-size:12px;color:var(--text-accent,#2a78d6);margin:2px 0 6px!important}}
+.nb-d{{font-size:13px;line-height:1.5;color:var(--text-secondary,#52514e);margin-bottom:6px!important}}
+.nb-ex{{font-size:12px;color:var(--text-muted,#898781);font-style:italic}}
+.nb-w{{background:var(--surface-1,rgba(127,127,127,.08));border-radius:12px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.5}}
+.nb-w a{{color:var(--text-accent,#2a78d6)}}
+{svg_style}
+</style>
+<div class="nb">
+<p class="nb-h">{e(TITLE)}</p>
+{svg}
+<p class="nb-cap">{e(CAPTION)}</p>
+<p class="nb-h2">Test Nimble's APIs on these use cases, right here in your AI.</p>
+<div class="nb-g">
+{tiles}
+</div>
+<div class="nb-w"><p style="font-weight:500">{e(INTEGRATE_TITLE)}</p>
+<p style="color:var(--text-secondary,#52514e)">{e(INTEGRATE_TEXT)} <a href="{INTEGRATE_URL}">{INTEGRATE_URL.removeprefix("https://")}</a></p></div>
+</div>
+'''
+
+
 def page_html(svg, svg_style):
     e = html.escape
     tiles = "\n".join(
@@ -170,6 +229,9 @@ def main():
     (HERE / "benchmark-chart.svg").write_text(svg + "\n")
     inline_svg, _ = chart_svg(standalone=False)
     (HERE / "onboarding.html").write_text(page_html(inline_svg, style))
+    (HERE / "onboarding-inline.html").write_text(inline_fragment(inline_svg, style))
+    (HERE / "benchmark-chart-light.svg").write_text(fixed_svg(svg, LIGHT) + "\n")
+    (HERE / "benchmark-chart-dark.svg").write_text(fixed_svg(svg, DARK) + "\n")
     chrome = shutil.which("google-chrome") or shutil.which("chromium") or \
         "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     if pathlib.Path(chrome).exists():

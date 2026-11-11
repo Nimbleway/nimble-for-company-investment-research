@@ -1,5 +1,12 @@
 # Benchmark: hedge fund company research
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../skills/onboard-your-agent/assets/benchmark-chart-dark.svg">
+  <img alt="Deep research task comparison for finance: F1 accuracy + coverage vs. cost per run. Nimble 0.594 at $0.45, Claude Opus 5.5 0.583 at $0.79, GPT-6.1 Sol 0.513 at $0.64, Exa 0.455 at $0.48, Parallel 0.418 at $0.54, Firecrawl 0.388 at $0.36." src="../skills/onboard-your-agent/assets/benchmark-chart-light.svg" width="640">
+</picture>
+
+*Finance Use-Case Benchmark v2, 40 tasks, November 2026. Higher and further left is better.*
+
 How well do web research agents do the jobs these skills are for? This page summarizes Nimble's public **Finance Use-Case Benchmark v2** (runs November 3 to 10, 2026; judged November 10; corrections November 11). The full method, task instructions, raw provider outputs, verdicts and answer keys are in [Nimbleway/Public-benchmarks/Finance-Use-Case-Benchmark](https://github.com/Nimbleway/Public-benchmarks/tree/main/Finance-Use-Case-Benchmark); the numbers below are copied from its `results/summary.json`.
 
 ## How it is scored

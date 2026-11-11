@@ -13,14 +13,18 @@ As soon as this skill loads, show the benchmark chart, then the five tiles below
 
 ### 1a. Show the prebuilt onboarding screen (never redraw it)
 
-The benchmark chart and the five tiles are prebuilt in `assets/`, next to this file (paths below are relative to this skill's base directory). Show them as they are. Never write chart or tile code yourself: generating it is what makes onboarding slow. Pick the first row your host supports:
+The benchmark chart and the five tiles are prebuilt in `assets/`, next to this file (paths below are relative to this skill's base directory). Show them as they are. Never write chart or tile code yourself: generating it is what makes onboarding slow.
+
+**Show them inline, in the conversation itself.** The user must see the chart and all five tiles in the chat, above your question. Never put them only in a side panel, a file card, a separate artifact or a browser tab, and never tell the user to look in a panel. Pick the first row your host supports:
 
 | Your host can… | Show |
 | - | - |
-| Send or preview a local file (for example the Claude desktop app's send-file tool with render, an IDE's HTML preview) | `assets/onboarding.html`: chart and tiles in one self-contained page, no scripts |
-| Show an image in the chat | `assets/onboarding.png`, by local path, or `https://raw.githubusercontent.com/Nimbleway/nimble-for-company-investment-research/main/skills/onboard-your-agent/assets/onboarding.png` |
-| Render visuals only from code you write (inline widgets, canvas) | Read `assets/benchmark-chart.svg` and pass it through verbatim (3 KB of static SVG, no libraries), then the markdown tiles below |
+| Render HTML inline in the chat (for example the Claude apps' inline visual or widget tool, an inline HTML block) | Read `assets/onboarding-inline.html` and pass it verbatim: chart and all five tiles in one static fragment (no doctype, no scripts, no libraries, about 6 KB) |
+| Render visuals inline only from SVG | Read `assets/benchmark-chart.svg` and pass it verbatim (3 KB of static SVG), then the markdown tiles below in your reply |
+| Show an image in the chat | `![Deep research task comparison for finance](https://raw.githubusercontent.com/Nimbleway/nimble-for-company-investment-research/main/skills/onboard-your-agent/assets/onboarding.png)` (chart and tiles in one image), then the integrations link below as text so it is clickable |
 | None of these (plain terminal) | The benchmark table below under its title, with Nimble's row in bold, then the markdown tiles below |
+
+`assets/onboarding.html` is the same screen as a full standalone page, for hosts that can only preview files; if that is all you can do, also put the markdown tiles in your reply so the user sees them in the chat.
 
 For the fallbacks, the chart data: Nimble's public Finance Use-Case Benchmark v2 (all eight finance jobs, 40 tasks, November 2026; source: [`benchmark/README.md`](../../benchmark/README.md)). **Title:** "Deep research task comparison for finance". **Caption:** "Finance Use-Case Benchmark v2, 40 tasks, November 2026. Higher and further left is better."
 
@@ -33,13 +37,13 @@ For the fallbacks, the chart data: Nimble's public Finance Use-Case Benchmark v2
 | Parallel | 0.418 | 0.54 |
 | Firecrawl | 0.388 | 0.36 |
 
-Use exactly these numbers; never round them up or add providers. The same numbers and the tile copy live in `assets/build.py`; when either changes, edit it there and run `python3 skills/onboard-your-agent/assets/build.py` to rebuild the SVG, HTML and PNG.
+Use exactly these numbers; never round them up or add providers. The same numbers and the tile copy live in `assets/build.py`; when either changes, edit it there and run `python3 skills/onboard-your-agent/assets/build.py` to rebuild the SVGs, the HTML page and fragment, and the PNG.
 
 ### 1b. The five tiles
 
 The tiles say what they are: the user is testing Nimble's APIs on real investment research use cases, right here in their own AI. Each tile names the Nimble API behind it. The fifth tile is for taking those APIs into the user's own stack.
 
-The prebuilt page already contains the tiles. When you showed only the SVG or the table, put this line above the tiles: **"Test Nimble's APIs on these use cases, right here in your AI."** Then use this markdown:
+The inline fragment and the PNG already contain the tiles. When you showed only the SVG or the table, put this line above the tiles: **"Test Nimble's APIs on these use cases, right here in your AI."** Then use this markdown:
 
 | 🔎 **Deep research** · *Web Search Agents API* | ⚡ **Fast search** · *Search + Extract APIs* |
 | - | - |

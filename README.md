@@ -4,7 +4,7 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 
 | Skill | What it does |
 | - | - |
-| [`onboard-your-agent`](skills/onboard-your-agent/SKILL.md) | Start here. Charts the finance benchmark (F1 accuracy + coverage vs. cost), shows the four use cases as tiles for testing Nimble's APIs in your AI plus a tile for integrating them into your stack, gets you onto a free Nimble trial and connected, then routes your research request. |
+| [`onboard-your-agent`](skills/onboard-your-agent/SKILL.md) | Start here. Shows the finance benchmark chart (deep research task comparison for finance) and the four use cases as tiles for testing Nimble's APIs in your AI plus a tile for integrating them into your stack, gets you onto a free Nimble trial and connected, then routes your research request. |
 | [`company-deep-research`](skills/company-deep-research/SKILL.md) | Cited deep research with 13 hedge fund Web Search Agents (fundamental deep dive, catalyst calendar, filing changes, forensic red flags, management track record, channel check, customer and supplier map, competitor momentum, government contracts, deal terms, deal tracker, credit file, credit early warning), plus a playbook for building your own agent when none fits. |
 | [`company-fast-search`](skills/company-fast-search/SKILL.md) | Answers in seconds with Nimble Search, Extract and Extract Templates: query patterns, source priority, date scoping, entity disambiguation and MNPI-safe sourcing for any company question. |
 | [`filings-media-pdfs`](skills/filings-media-pdfs/SKILL.md) | Parse 10-K exhibits, decks, credit and merger agreements and spreadsheets into markdown with Extract file parsing; download PDFs, images, audio and video with the Media API, to disk or straight to S3/GCS. |
@@ -58,6 +58,13 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 
 ## Benchmark
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="skills/onboard-your-agent/assets/benchmark-chart-dark.svg">
+  <img alt="Deep research task comparison for finance: F1 accuracy + coverage vs. cost per run. Nimble 0.594 at $0.45, Claude Opus 5.5 0.583 at $0.79, GPT-6.1 Sol 0.513 at $0.64, Exa 0.455 at $0.48, Parallel 0.418 at $0.54, Firecrawl 0.388 at $0.36." src="skills/onboard-your-agent/assets/benchmark-chart-light.svg" width="640">
+</picture>
+
+*Finance Use-Case Benchmark v2, 40 tasks, November 2026. Higher and further left is better.*
+
 In Nimble's public Finance Use-Case Benchmark v2 (40 tasks, six providers, November 2026), Nimble had the highest combined score across the eight finance jobs (0.594, Claude Opus 5.5 0.583) at $0.45 a run. On hedge fund company research it returned the most verified facts and got every critical answer-key question right, while Claude Opus 5.5 scored higher overall (0.608 against 0.573). Tables, method and caveats: [`benchmark/README.md`](benchmark/README.md).
 
 ## Layout
@@ -65,6 +72,7 @@ In Nimble's public Finance Use-Case Benchmark v2 (40 tasks, six providers, Novem
 ```
 skills/
   onboard-your-agent/SKILL.md
+  onboard-your-agent/assets/                  # prebuilt benchmark chart + tiles (inline fragment, page, PNG, SVGs) and build.py
   onboard-your-agent/assets/                  # prebuilt onboarding screen (SVG chart, HTML, PNG) + build.py
   company-deep-research/SKILL.md
   company-deep-research/agents/hf-*.json      # 13 agent specs: skill, output schema, example questions
