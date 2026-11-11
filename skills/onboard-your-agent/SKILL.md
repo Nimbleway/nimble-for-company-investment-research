@@ -18,7 +18,7 @@ Plot the six providers from Nimble's public Finance Use-Case Benchmark v2 (all e
 - **x axis:** cost per run (USD), starting at $0.
 - **y axis:** "F1 accuracy + coverage" (the benchmark's combined score), from 0.3 to 0.65.
 - **Points:** one per provider, each labeled with its name. Nimble in an accent color, the others in one neutral color.
-- **Title:** "F1 accuracy + coverage vs. cost per run". **Caption:** "Finance Use-Case Benchmark v2, 40 tasks, November 2026. Higher and further left is better."
+- **Title:** "Deep research task comparison for finance". **Caption:** "Finance Use-Case Benchmark v2, 40 tasks, November 2026. Higher and further left is better."
 
 | Provider | F1 accuracy + coverage | Cost per run (USD) |
 | - | - | - |
@@ -45,7 +45,7 @@ The tiles say what they are: the user is testing Nimble's APIs on real investmen
 | Turn 10-K exhibits, decks, credit and merger agreements into markdown; download files and webcasts to disk or S3. | Prices, reviews, jobs and store data from 800+ Extract Templates, run as batches or scheduled jobs into S3 or Databricks. |
 | *"Pull the debt table from this credit agreement."* | *"Track Celsius prices at Walmart and Target daily."* |
 
-> 🔌 **Integrate Nimble's APIs into your stack.** Like what you see? Call the same APIs from your own apps, agents and warehouse (MCP server, SDK and CLI, Databricks and Snowflake apps): **https://docs.nimbleway.com/integrations/overview**
+> 🔌 **Try asking Nimble your most complex web research questions.** Once you're done testing, call the same APIs from your own apps and agents (MCP, SDK, CLI, & more): **https://docs.nimbleway.com/integrations/overview**
 
 Then ask:
 
