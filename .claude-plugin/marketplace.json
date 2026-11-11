@@ -12,7 +12,7 @@
       "name": "nimble-investment-research",
       "source": "./",
       "description": "Deep research agents, fast search, filings and PDF parsing, and alternative data at scale for hedge fund company research, with the Nimble MCP server bundled.",
-      "version": "1.2.3",
+      "version": "1.2.4",
       "category": "productivity",
       "tags": [
         "hedge-funds",
