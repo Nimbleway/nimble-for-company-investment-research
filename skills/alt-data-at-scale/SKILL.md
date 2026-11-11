@@ -25,7 +25,7 @@ Before running anything, write down with the user:
 2. **The universe.** The exact SKUs, stores, place IDs, keywords or company names, each mapped to a brand, company and ticker. A fixed universe is a panel; a moving one is noise.
 3. **The metrics**: average and median price, discount depth and frequency, in-stock rate, rank or position, review count velocity, average rating and its trend, postings count by function and location, new store count.
 4. **Geography and cadence.** Which zip codes or stores (prices and stock vary by location) and how often (daily for prices, weekly for reviews and postings).
-5. **History.** Web data mostly starts the day you begin collecting. Start early; use web.archive.org snapshots or review timestamps for partial backfill, and say clearly what is backfilled.
+5. **History.** Web data mostly starts the day you begin collecting. Start early; use web.archive.org snapshots or review timestamps for partial backfill, and say clearly what is backfilled. A baseline is the same page, product, place and unit on the earlier date. Never invent or approximate one to fill a gap; with too few, the answer is "insufficient evidence". A year-over-year figure is not a comparison with your since date.
 
 Pilot on 20 to 50 inputs, check the fields, then scale.
 
@@ -129,6 +129,7 @@ curl -s -X POST https://sdk.nimbleway.com/v2/extract/templates/generations \
 
 - **Keys and timestamps.** Store every row with input key, template name and version, collection timestamp (UTC), zip or store, and `tag`. Keep raw JSON next to the cleaned table so fields can be re-derived.
 - **Same panel every run.** Changes to the universe, zip codes or templates break time series. Version the input list and log every change.
+- **Company statements are not observations.** Promotions or prices the company announced (releases, earnings calls) are what the company said; measure them on the live page before counting them.
 - **Missing is not zero.** A failed or empty fetch is a gap, not "out of stock" or "price 0". Track success rate per run and per site; alert when it drops.
 - **Normalize**: currency, unit price (per oz, per count), pack size, sale versus list price, sponsored versus organic rank.
 - **Entity mapping.** Map product to brand to company to ticker, and keep the map under version control. Private-label and licensed brands are common traps.

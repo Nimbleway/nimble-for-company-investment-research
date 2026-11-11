@@ -27,16 +27,18 @@ Use one run per company and question. Do not research first and then start a run
 | `hf-filing-changes` | what changed in the latest 10-K or 10-Q against the prior one (new risks, dropped language, moved numbers) | research |
 | `hf-forensic-red-flags` | about accounting or governance risk: auditor changes, restatements, related parties, SEC letters, short reports | research |
 | `hf-management-track-record` | whether management delivers on guidance and commitments, plus leadership changes and insider trades | research |
-| `hf-channel-check` | a specific "what does the web show today versus a past date" question: prices, promotions, stores, hiring, public databases | research |
+| `hf-channel-check` | a specific "what does the web show today versus a past date" question: prices, promotions, stores, hiring, public databases, each measured against an archived baseline | research |
 | `hf-customer-supplier-map` | who the company sells to and buys from, with evidence | dataset_building |
 | `hf-competitor-momentum` | which rivals (public or private) are gaining ground, as dated signals | dataset_building |
 | `hf-government-contracts` | for federal awards, task orders and bid protests, with obligated amounts against ceilings | dataset_building |
 | `hf-deal-terms` | for the terms of a merger agreement: consideration, outside date, break fees, regulatory covenants, conditions | research |
-| `hf-deal-tracker` | where a pending merger stands with each regulator and court: approvals, lawsuits, votes, rival bids, next dates | research |
+| `hf-deal-tracker` | where a pending merger stands with each regulator and court: approvals, lawsuits, votes, rival bids, next dates, and the outside date from the merger agreement | research |
 | `hf-credit-profile` | for a credit file on a public or private borrower: capital structure, ratings, lender marks, financials, key terms | research |
-| `hf-credit-early-warning` | for stress signals around a borrower since a date: lender actions, debt quotes, lawsuits, liens, WARN notices, adviser hires | research |
+| `hf-credit-early-warning` | for stress signals around a borrower since a date: lender actions, debt quotes, lawsuits, liens, WARN notices, adviser hires, each marked active, cured or historical, plus capital structure and liquidity | research |
 
 Each agent's full spec (its skill, output schema, effort and example questions) is in `agents/<agent_name>.json` next to this file. Read the matching file before the first run; its `suggested_questions` show the input format the agent expects.
+
+The three monitors (`hf-deal-tracker`, `hf-credit-early-warning`, `hf-channel-check`) were tightened after live tests and open with a `bottom_line` object: `summary`, `key_risk`, `next_catalyst` and `next_catalyst_date` (plus `stress_level` for credit, from active signals only). If an account copy of one of these agents was created before 2026-11-11, update it from the gallery template or the bundled spec (`nimble_agents_update` or `PATCH /v2/agents/{agent_id}`) so it gets the new skill and schema.
 
 If two agents fit, run the one closest to the user's words. "Is this a short?" is `hf-forensic-red-flags`; "build me the bull and bear case" is `hf-fundamental-deep-dive`. Credit desks start with `hf-credit-profile`, then monitor with `hf-credit-early-warning`. Merger arb starts with `hf-deal-terms`, then monitors with `hf-deal-tracker`.
 
@@ -90,9 +92,16 @@ Timing: `high` runs take about 5 to 15 minutes and can run to 30. Tell the user 
 - Rows or sections returned against what was asked. A thin `checked_no_finding` list on a hard question means the agent stopped early; say so.
 - Entity drift: every source is about the right company (ticker, CIK, domain), not a parent, subsidiary or namesake.
 - Open two or three citations. Each `source_url` must be the page that states the value, not a search page.
-- Dates are event dates, not today's date.
+- Dates are event dates, not today's date. A window ("third or fourth quarter of 2027") stays a window: `date` is null and the window is in `date_text` with `date_precision`. Never turn a window into a day.
+- Status is current. In `hf-credit-early-warning`, read each signal's `status`: a `cured` signal (see `cured_by`) or a `historical` one is not live stress. A cured exchange-listing deficiency shown as active is the classic error.
+- Required fields can come back null. The platform does not enforce the schema at run time, so check the required fields and say which are empty rather than filling them.
+- No internal references in text. Strings such as `quote:/pages/...`, `.md#L12` or file paths inside a field are leaks; remove them and cite the `source_url` instead.
+- A value whose only source is a paywalled page is unverified; say so.
+- Prices name the instrument, the date and the quote type (`price_note`). A fair value disclosed in a filing is not a market quote.
+- `checked_no_finding` names the exact registers, dockets or pages searched and the period. A news search that never reached the register is not evidence that nothing exists.
+- For `hf-channel-check`, `evidence_direction: insufficient` means too few like-for-like baselines. Report it as insufficient, not as "no", and say how many observations had a baseline.
 
-Present the answer with its citations inline, lead with what matters for the position (the variant view, the nearest catalyst, the highest-severity flag), and keep analyst opinions labeled as opinions.
+Present the answer with its citations inline. Lead with the `bottom_line` when the agent returns one, otherwise with what matters for the position (the variant view, the nearest catalyst, the highest-severity flag), and keep analyst opinions labeled as opinions.
 
 **Follow-ups.** For a narrower follow-up on the same subject, run the same agent again with `previous_interaction_id` set to the earlier run's `interaction_id` (REST), or put the earlier answer's key facts into the new `input`. Rerunning monitors such as `hf-credit-early-warning` or `hf-deal-tracker` with a later "since" date produces the change log.
 
@@ -101,9 +110,9 @@ Present the answer with its citations inline, lead with what matters for the pos
 Create one agent per repeatable question type, not per company. Name it `hf-custom-<topic>` so it is found and reused next time.
 
 1. **Classify `use_case`.** `research` for a brief or a nested answer on one subject; `dataset_building` for a list of entities that meet criteria (all suppliers, all lawsuits, every store opening); `enrichment` for adding fields to rows the user already has (a watchlist or CSV, at most 20 rows and 200 cells per run, practical batch about 5 rows for 6 researched fields).
-2. **Write the `skill`** as a playbook, in the style of the bundled specs: where the evidence lives (name the regulators, registries and filing types), what each term means, the pitfalls, and the evidence rules below. Copy the "Citations and evidence" block from any bundled spec verbatim; it holds the MNPI and citation rules every investment agent needs.
+2. **Write the `skill`** as a playbook, in the style of the bundled specs: where the evidence lives (name the regulators, registries and filing types), what each term means, the pitfalls, and the evidence rules below. Copy the "Citations and evidence" and "What was not found" blocks verbatim from `hf-deal-tracker`, `hf-credit-early-warning` or `hf-channel-check` (the latest versions, which also ban internal references in text and paywalled-only sources); they hold the MNPI and citation rules every investment agent needs.
 3. **Write `goals`** (REST only) as 3 to 6 checkable requirements, for example "Every row cites the primary record (filing, docket, regulator page) when one exists".
-4. **Design the `output_schema`.** Flat, 5 to 8 described fields per object, `["string","null"]` for anything uncertain, `YYYY-MM-DD` dates, numbers as numbers with the unit in the description, enums for judgments, a `source_url` per value, and a `checked_no_finding` array so absence is reported, not hidden. Array root for lists. No `format`, `pattern`, `min*`, `max*` or free-form maps.
+4. **Design the `output_schema`.** Flat, 5 to 8 described fields per object, `["string","null"]` for anything uncertain, `YYYY-MM-DD` dates, numbers as numbers with the unit in the description, enums for judgments, a `source_url` per value, and a `checked_no_finding` array so absence is reported, not hidden. For a research object, put a `bottom_line` object first (summary, key risk, next catalyst). Dates that may be windows get `date` (null unless exact) plus `date_text` and `date_precision`. Monitoring signals get `status` (active, cured, historical), `cured_by` and `severity_reason`. Keep roles apart in separate fields (a lender is not an owner). Array root for lists. No `format`, `pattern`, `min*`, `max*` or free-form maps.
 5. **Set `sources`** when you know them: `allow` tiers (for example SEC EDGAR, the company's IR domain, the relevant regulator), `block` mirrors and scraped-filing sites, and `prioritize` such as "primary records beat press; press beats aggregators".
 6. **Effort.** `high` for anything with a schema and for all dataset building (required). `medium` only for a free-text brief. `x-high` for an exhaustive single-site catalog or hard fields one row per run. Never `low` when citations matter.
 7. **Test on one company you already know the answer for**, check it against section 4, then fix the skill or schema (not the effort) before running the rest.
@@ -117,5 +126,6 @@ Example: "Map every data center campus Vertiv's top customers announced in 2026"
 - **Public information only.** No paywalled, logged-in, leaked or expert-network content. If only a paywalled headline is public, it can be quoted as "Headline only:".
 - **Facts, not forecasts.** A value nobody published is null. Analyst estimates, ratings and targets are reported as views with their source, never as evidence.
 - **Primary sources win.** Filings, regulators, courts, government databases and the company's own statements beat press, and press beats aggregators.
-- **Point in time.** Every value carries the date it was published or happened, so the user can tell what the market knew and when.
+- **Point in time.** Every value carries the date it was published or happened, so the user can tell what the market knew and when. A window is not a date, and a cured problem is not a live one.
+- **No paywalled-only values.** A paywalled page is never the only source for a value.
 - Nimble Web Search Agents cannot read login-walled sites (LinkedIn, Glassdoor, X, Facebook and Instagram feeds). Use `alt-data-at-scale` for sites that have a Nimble Extract Template.

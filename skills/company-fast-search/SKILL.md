@@ -21,7 +21,7 @@ Nimble gives three fast tools. Pick the cheapest one that answers the question, 
 2. **Decide what kind of source answers it** (see `references/source-map.md`) and aim the query there with `include_domains` or a `site:` operator.
 3. **Search narrow.** `max_results` 3 to 5, `search_depth: "lite"` when titles and URLs are enough to pick the page, the default (`standard`) when snippets may hold the answer.
 4. **Read the primary page** with Extract when the snippet is not enough or the number matters. Quote the figure from the page, not from the snippet.
-5. **Answer with the citation and its date**: the value, the URL it was read on, and the date the source published it. Say what you checked and did not find.
+5. **Answer with the citation and its date**: the value, the URL it was read on, and the date the source published it. Say what you checked and did not find, naming the exact pages or registers and the period they cover.
 
 Stop at the first primary source that answers the question. If after three searches you are reconciling conflicting pages, escalate to a Web Search Agent instead of searching more.
 
@@ -77,10 +77,12 @@ When two sources disagree, the primary one wins; report the conflict if it matte
 - Filing deadlines set how fresh a source can be: 8-K within 4 business days of most events, Form 4 within 2 business days, Schedule 13D within 5 business days of crossing 5%, 13F up to 45 days after quarter-end (so holdings can be months old).
 - Prefer the filing or acceptance date over an article's date, and the fiscal period over the publication date. Note "as reported" versus "restated".
 - For "as of" questions, use only pages dated on or before that date, and never fill gaps from model memory. Before concluding, check once for a newer filing, an amendment (`/A`) or a correction.
+- A window is not a date. "Expected to close in the third or fourth quarter of 2027" is reported as that window, never as a specific day.
+- Check whether a problem is still live. An exchange deficiency notice, covenant breach or going-concern doubt can be cured or withdrawn by a later filing; say "cured on <date>" rather than reporting it as current.
 
 ## Compliance guardrails (apply to every lookup)
 
-- **Public information only.** Do not use paywalled, logged-in, leaked or confidential material, or expert-network transcripts: they carry MNPI risk. If only a paywalled headline and opening lines are public, they may be quoted, labeled "Headline only".
+- **Public information only.** Do not use paywalled, logged-in, leaked or confidential material, or expert-network transcripts: they carry MNPI risk. If only a paywalled headline and opening lines are public, they may be quoted, labeled "Headline only". A paywalled page is never the only source for a value.
 - Do not try to get past logins, paywalls or CAPTCHAs, and do not create accounts to see data.
 - Avoid collecting personal data that the question does not need.
 - Report estimates, price targets and ratings as attributed views, not facts.
@@ -91,7 +93,7 @@ Lead with the answer, then the evidence:
 
 > **Answer:** CoreWeave's next earnings date is 2026-11-12 (confirmed).
 > **Source:** CoreWeave IR events page, https://..., published 2026-10-22.
-> **Checked, nothing found:** no 8-K changing the date since 2026-10-22.
+> **Checked, nothing found:** EDGAR 8-K filings for CoreWeave from 2026-10-22 to today; none changes the date.
 
 Keep numbers in their units and periods, include every URL, and say how fresh each source is.
 
