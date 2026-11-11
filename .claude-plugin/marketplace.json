@@ -1,0 +1,27 @@
+{
+  "name": "nimble-investment-research",
+  "owner": {
+    "name": "Nimble",
+    "email": "support@nimbleway.com"
+  },
+  "metadata": {
+    "description": "Nimble skills for company investment research at hedge funds"
+  },
+  "plugins": [
+    {
+      "name": "nimble-investment-research",
+      "source": "./",
+      "description": "Deep research agents, fast search, filings and PDF parsing, and alternative data at scale for hedge fund company research.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "tags": ["hedge-funds", "investment-research", "alternative-data", "sec-filings", "web-search"],
+      "skills": [
+        "./skills/onboard-your-agent",
+        "./skills/company-deep-research",
+        "./skills/company-fast-search",
+        "./skills/filings-media-pdfs",
+        "./skills/alt-data-at-scale"
+      ]
+    }
+  ]
+}
