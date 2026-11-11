@@ -11,14 +11,18 @@ You are setting up Nimble for an investment professional (analyst, PM, credit or
 
 As soon as this skill loads, show the benchmark chart, then the five tiles below it, then ask exactly one question. Do this before any setup talk.
 
-### 1a. Benchmark chart (above the tiles)
+### 1a. Show the prebuilt onboarding screen (never redraw it)
 
-Plot the six providers from Nimble's public Finance Use-Case Benchmark v2 (all eight finance jobs, 40 tasks, November 2026; source: [`benchmark/README.md`](../../benchmark/README.md)) as a scatter chart:
+The benchmark chart and the five tiles are prebuilt in `assets/`, next to this file (paths below are relative to this skill's base directory). Show them as they are. Never write chart or tile code yourself: generating it is what makes onboarding slow. Pick the first row your host supports:
 
-- **x axis:** cost per run (USD), starting at $0.
-- **y axis:** "F1 accuracy + coverage" (the benchmark's combined score), from 0.3 to 0.65.
-- **Points:** one per provider, each labeled with its name. Nimble in an accent color, the others in one neutral color.
-- **Title:** "Deep research task comparison for finance". **Caption:** "Finance Use-Case Benchmark v2, 40 tasks, November 2026. Higher and further left is better."
+| Your host can… | Show |
+| - | - |
+| Send or preview a local file (for example the Claude desktop app's send-file tool with render, an IDE's HTML preview) | `assets/onboarding.html`: chart and tiles in one self-contained page, no scripts |
+| Show an image in the chat | `assets/onboarding.png`, by local path, or `https://raw.githubusercontent.com/Nimbleway/nimble-for-company-investment-research/main/skills/onboard-your-agent/assets/onboarding.png` |
+| Render visuals only from code you write (inline widgets, canvas) | Read `assets/benchmark-chart.svg` and pass it through verbatim (3 KB of static SVG, no libraries), then the markdown tiles below |
+| None of these (plain terminal) | The benchmark table below under its title, with Nimble's row in bold, then the markdown tiles below |
+
+For the fallbacks, the chart data: Nimble's public Finance Use-Case Benchmark v2 (all eight finance jobs, 40 tasks, November 2026; source: [`benchmark/README.md`](../../benchmark/README.md)). **Title:** "Deep research task comparison for finance". **Caption:** "Finance Use-Case Benchmark v2, 40 tasks, November 2026. Higher and further left is better."
 
 | Provider | F1 accuracy + coverage | Cost per run (USD) |
 | - | - | - |
@@ -29,13 +33,13 @@ Plot the six providers from Nimble's public Finance Use-Case Benchmark v2 (all e
 | Parallel | 0.418 | 0.54 |
 | Firecrawl | 0.388 | 0.36 |
 
-Use exactly these numbers; never round them up or add providers. If your host can render visual output (Claude artifacts or inline widgets, ChatGPT canvas, an HTML preview), draw the chart there (inline SVG or Chart.js), compact, about 300px tall. If it cannot, show the table above under the title, with Nimble's row in bold.
+Use exactly these numbers; never round them up or add providers. The same numbers and the tile copy live in `assets/build.py`; when either changes, edit it there and run `python3 skills/onboard-your-agent/assets/build.py` to rebuild the SVG, HTML and PNG.
 
 ### 1b. The five tiles
 
 The tiles say what they are: the user is testing Nimble's APIs on real investment research use cases, right here in their own AI. Each tile names the Nimble API behind it. The fifth tile is for taking those APIs into the user's own stack.
 
-**How to draw the tiles.** Put this line above the tiles: **"Test Nimble's APIs on these use cases, right here in your AI."** If your host can render visual output, draw a 2×2 grid of four cards, each with a short title, the Nimble API it tests, one line of what it does and one example, and below the grid one full-width fifth card with the same bold title style, one line and a link. Keep it plain and compact. If not, use this markdown:
+The prebuilt page already contains the tiles. When you showed only the SVG or the table, put this line above the tiles: **"Test Nimble's APIs on these use cases, right here in your AI."** Then use this markdown:
 
 | 🔎 **Deep research** · *Web Search Agents API* | ⚡ **Fast search** · *Search + Extract APIs* |
 | - | - |

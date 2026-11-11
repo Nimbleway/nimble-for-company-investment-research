@@ -65,6 +65,7 @@ In Nimble's public Finance Use-Case Benchmark v2 (40 tasks, six providers, Novem
 ```
 skills/
   onboard-your-agent/SKILL.md
+  onboard-your-agent/assets/                  # prebuilt onboarding screen (SVG chart, HTML, PNG) + build.py
   company-deep-research/SKILL.md
   company-deep-research/agents/hf-*.json      # 13 agent specs: skill, output schema, example questions
   company-fast-search/SKILL.md
