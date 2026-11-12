@@ -96,7 +96,7 @@ Default to the MCP server: it uses OAuth, so no API key is created, pasted or st
 
 | Host | How |
 | - | - |
-| Claude Code | Nothing extra to install: this plugin (`nimble-investment-research`) bundles the Nimble MCP server. Run `/mcp`, pick **nimble** and authorize. If the plugin isn't installed yet, install it first (see **Install these skills** below) |
+| Claude Code | If the `nimble-investment-research` plugin is installed, the Nimble MCP server is bundled: run `/mcp`, pick **nimble** and authorize. If the skills were installed with `npx skills add`, run `claude mcp add --transport http --scope user nimble https://mcp.nimbleway.com/mcp` in a terminal (or run it for the user if you can run shell commands), then `/mcp` to authorize |
 | Claude.ai / Claude Desktop / Cowork | Install **Nimble** from the plugin directory, or add a custom connector at `https://mcp.nimbleway.com/mcp` under **Customize → Connectors**, then **Connect** |
 | ChatGPT | Settings → Apps & Connectors → add a custom connector with URL `https://mcp.nimbleway.com/mcp` (requires developer mode on some plans), then sign in |
 | Cursor, VS Code, other MCP clients | Add `{"mcpServers": {"nimble": {"type": "http", "url": "https://mcp.nimbleway.com/mcp"}}}`; the first tool call starts OAuth |
@@ -115,14 +115,15 @@ Then the user creates a key at **https://online.nimbleway.com/settings/api-keys*
 
 If a tool returns an authorization URL, show it exactly as given and wait. Do not fall back to a generic web search or fetch tool while waiting; that hides the setup problem and returns different data.
 
-**Install these skills** so the agent can route requests:
+**Install these skills** so the agent can route requests (if the user is reading this, they are installed on this host; share this when they want them on another tool or for a teammate):
 
-| Host | Command |
+| Host | How |
 | - | - |
-| Claude Code | `claude plugin marketplace add Nimbleway/nimble-for-company-investment-research && claude plugin install nimble-investment-research@nimble-investment-research` (this one plugin is all Claude Code needs: skills and the Nimble MCP server) |
-| Cursor, Codex, other agents | `npx skills add Nimbleway/nimble-for-company-investment-research` |
+| Claude Code, Codex, Cursor and other agents | `npx skills add Nimbleway/nimble-for-company-investment-research` (one command; then connect the MCP server as above) |
+| Claude Code, with the MCP server bundled | `claude plugin marketplace add Nimbleway/nimble-for-company-investment-research && claude plugin install nimble-investment-research@nimble-investment-research` |
+| ChatGPT Business, Enterprise and Edu | Zip each folder under `skills/` and upload it under **Skills → Create → Upload from your computer** (one zip per skill; a workspace admin may need to allow uploads) |
+| ChatGPT on other plans, or any other agent | Add the `SKILL.md` files to the project or custom GPT instructions |
 | Claude.ai | Zip each folder under `skills/` and upload it under **Customize → Skills** |
-| ChatGPT or any other agent | Add the `SKILL.md` files to the project or custom GPT instructions |
 
 ## Step 5: Route the request to a skill
 

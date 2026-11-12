@@ -13,28 +13,29 @@ Agent skills that give your AI agent (Claude, ChatGPT, Cursor, Codex and others)
 ## Quick start
 
 1. **Get a free trial:** https://online.nimbleway.com/signup
-2. **Connect Nimble to your agent.** The MCP server (`https://mcp.nimbleway.com/mcp`) uses OAuth, so no API key is needed. In Claude Code it comes bundled with the plugin in step 3, so there's nothing else to install: run `/mcp` and authorize **nimble**. For PDF parsing, media downloads, batches and Jobs, also install the CLI (`npm i -g @nimble-way/nimble-cli`) and set `NIMBLE_API_KEY` from https://online.nimbleway.com/settings/api-keys.
-3. **Install the skills**
-
-   Claude Code (one plugin: the skills plus the Nimble MCP server):
-
-   ```bash
-   claude plugin marketplace add Nimbleway/nimble-for-company-investment-research
-   ```
-
-   ```bash
-   claude plugin install nimble-investment-research@nimble-investment-research
-   ```
-
-   Cursor, Codex and other agents:
+2. **Install the skills.** One command for Claude Code, Codex, Cursor and other agents:
 
    ```bash
    npx skills add Nimbleway/nimble-for-company-investment-research
    ```
 
-   Claude.ai: zip a folder under `skills/` and upload it under **Customize → Skills**. ChatGPT or any other agent: add the `SKILL.md` files to the project or GPT instructions.
+   Other ways to install:
 
-4. **Say "onboard my agent for investment research"** and answer one question: what kind of company research do you want to test? Or try: *"Underwrite Duolingo long on paid subscriber growth."*
+   - **Claude Code, with the MCP server bundled (one step instead of two):** `claude plugin marketplace add Nimbleway/nimble-for-company-investment-research`, then `claude plugin install nimble-investment-research@nimble-investment-research`.
+   - **ChatGPT (Business, Enterprise and Edu):** zip a folder under `skills/` and upload it under **Skills → Create → Upload from your computer**, one zip per skill. On other plans, add the `SKILL.md` files to a project or custom GPT's instructions.
+   - **Claude.ai:** zip a folder under `skills/` and upload it under **Customize → Skills**.
+   - **Any other agent:** add the `SKILL.md` files to its instructions.
+
+3. **Say "onboard my agent for investment research"**, or try *"Underwrite Duolingo long on paid subscriber growth."* The onboarding skill checks whether Nimble is connected and, if not, walks you through it for your host. The Nimble MCP server (`https://mcp.nimbleway.com/mcp`) uses OAuth, so no API key is needed:
+
+   | Host | Connect Nimble |
+   | - | - |
+   | Claude Code | `claude mcp add --transport http --scope user nimble https://mcp.nimbleway.com/mcp`, then run `/mcp` and authorize **nimble** (already bundled if you installed the plugin) |
+   | ChatGPT | Settings → Apps & Connectors → add a custom connector with URL `https://mcp.nimbleway.com/mcp` (developer mode on some plans) |
+   | Claude.ai / Claude Desktop | **Customize → Connectors** → add a custom connector at `https://mcp.nimbleway.com/mcp` |
+   | Codex, Cursor and other MCP clients | Add the server URL above to the client's MCP config; the first tool call starts OAuth |
+
+   For PDF parsing, media downloads, batches and Jobs, also install the CLI (`npm i -g @nimble-way/nimble-cli`) and set `NIMBLE_API_KEY` from https://online.nimbleway.com/settings/api-keys.
 
    To call the same APIs from your own code, agents or warehouse, see https://docs.nimbleway.com/integrations/overview.
 
